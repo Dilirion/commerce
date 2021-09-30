@@ -1,0 +1,34 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="ml-4">
+        <h2>{{title}}</h2>
+    </div>
+    
+    <ul class="list-group list-group-flush">
+        {% for listing in listings %}
+        
+            <li class="list-group-item">
+                <!-- <div style="margin: 30px; border-width: thin; border-color: gray; border-style: solid; border-radius: 5px;" > -->
+                    <table class="table table-borderless">
+                        {% if listing.image_url != '' %}
+                            <td style="width: 6cm;">                                
+                                    <img src={{listing.image_url}} class="img-thumbnail" style="width: 5cm;">  
+                            </td>
+                        {% endif %}
+                        <td>
+                            <div style="font-size: large; font-weight: 700;"><a href="{% url 'listing' listing.id %}">{{listing.title}}</a></div>
+                            <div style="font-size: medium; font-weight: 500;">{{listing.description}}</div>
+                            <div>Price: {{ listing.current_price }} $</div>     
+                            <div style="font-size: small; font-weight: 400; color: lightslategray;">Created: {{ listing.date_of_creating }}</div>               
+                        </td>
+                    </table>
+                <!-- </div> -->
+            </li>
+        {% empty %}
+            <li>Sorry, no listings.</li>
+            
+        {% endfor %}
+    </dl>
+    
+{% endblock %}

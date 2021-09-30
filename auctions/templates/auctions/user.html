@@ -1,0 +1,41 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if is_staff %}
+    <h2>Administrator: {{name}}</h2>
+    {% else %}
+    <h2>User: {{name}}</h2>
+    {% endif %}
+
+    {% if my_page %}    
+        <h5>My wins</h5>
+
+        <ul class="ml-3 list-group" style="width: max-content; padding-bottom: 1.5ex;">
+            {% for listing in wins %}            
+                <li class="list-group-item">
+                    <a class="text-secondary" href="{% url 'listing' listing.id %}">{{listing.title}}</a>
+                </li>                        
+            {% empty %}
+                You haven't won any listing :(       
+            {% endfor %}
+        </ul>
+        
+    {% endif %}
+
+    {% if my_page %}
+        <h5>My listings</h5>
+    {% else %}
+        <h5>Listed by {{name}}</h5>
+    {% endif %}
+
+    <ul class="ml-3 list-group" style="width: max-content;">
+        {% for listing in listings %}            
+            <li class="list-group-item">
+                <a class="text-secondary" href="{% url 'listing' listing.id %}">{{listing.title}}</a>
+            </li>                        
+        {% empty %}
+            <li class="list-group-item">You haven't won any listing :(</li>        
+        {% endfor %}
+    </ul>   
+    
+{% endblock %}

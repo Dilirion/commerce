@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="pl-4 mb-2 bg-light text-dark">
+    <form action="create" method="post">
+        {% csrf_token %}
+        <table>
+            {% for field in form %}            
+                <tr >
+                    <td style="width: 3.8cm; padding-top: 5mm;"><h4>{{ field.label }}</h4></td>
+                    <td style="padding-top: 5mm;">{{ field }}</td>
+                </tr>            
+            {% endfor %}    
+            <tr >
+                <td style="width: 3cm;"></td>
+                <td style="padding: 30px; padding-left: 0mm;">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </td>
+            </tr>
+        </table>
+    </form>   
+</div>
+{% endblock %}

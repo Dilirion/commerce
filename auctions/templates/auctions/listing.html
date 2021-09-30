@@ -1,0 +1,108 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div style="margin: 15px;">
+        <div>
+            <h2>Listing: {{listing.title}}</h2>
+        </div>
+
+        <div>
+            {% if user.is_authenticated %}
+                {% if in_watchlist %}
+                    <span class="bg-secondary badge badge-primary badge-pill rounded">
+                        <a class="text-light" href="{% url 'watchlist' listing.id %}" style="font-size: 12pt;">Watchlist</a>
+                    </span>                
+                {% else %}
+                    <span class="bg-light badge badge-primary badge-pill rounded">
+                        <a class="text-secondary" href="{% url 'watchlist' listing.id %}" style="font-size: 12pt;">Watchlist</a>
+                    </span>                     
+                {% endif %}
+            {% endif %}
+        </div>
+        
+        <div>
+            {% if listing.image_url != '' %}
+                <img class="rounded my-2" src={{listing.image_url}} style="height: 10cm;">
+            {% endif %}
+        </div>
+
+        
+        <div>
+            {{listing.description}}
+        </div>
+        <div style="font-size: 20pt; font-weight: 700; margin-top: 20px;">${{ listing.current_price }}</div>                    
+        
+        
+        
+        {% if user.is_authenticated %}
+            {% if listing.is_active %}
+                <div class="text-secondary" style="font-size: 10pt;">{{label}}</div>
+                {% if message %}
+                    <div class="alert alert-danger" role="alert">{{message}}</div>
+                {% endif %}        
+                <form action="{% url 'listing' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="fieldWrapper rounded mb-2">
+                        {{ bid_form.price.errors }}
+                        {{ bid_form.price }}
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Place bid"  name = "bid_form">
+                </form>
+                {% if is_owner %}
+                    <form class="rounded my-2" action="{% url 'close_listing' listing.id %}">
+                        <input class="btn btn-dark" type ="submit" value="Close listing">
+                    </form>
+                {% endif %}  
+            {% endif %}                  
+            {% if is_winner %}
+                <div class="alert alert-success" role="alert">YOU HAVE WON THIS LISTING!</div>
+            {% endif %}   
+        {% endif %}
+
+        {% if not listing.is_active %}
+            <div class="alert alert-light" role="alert">Listing is closed.</div> 
+        {% endif %}
+
+        <div class="p-3 mb-2 bg-light text-dark">
+            <h3>Details</h3>
+        </div>
+        <div class="p-2 border border-info rounded">
+            <div>Listed by: <a class="text-muted" href="{% url 'user' listing.owner.id %}">{{listing.owner.username}}</a> </div> 
+            <div>When: {{listing.date_of_creating}}</div>
+            <div>Category: <a class="text-muted" href="{% url 'category' category %}">{{category}}</a></div>
+        </div>
+
+        <div class="p-3 my-2 bg-light text-dark">
+            <h3>Comments</h3>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div>
+            <form action = "{% url 'listing' listing.id %}" method = 'POST'>
+                {% csrf_token %}
+                <div class="fieldWrapper rounded mb-2">
+                    {{ comment_form.comment.errors }}
+                    {{ comment_form.comment }}
+                </div>
+                <input class="btn btn-primary" type = "submit" value = "Send"  name = "comment_form">
+            </form>
+        </div>
+        {% endif %}
+        
+        <ul class="ml-5 list-unstyled">            
+            {% for comment in comments %}
+                <li class="d-flex flex-row-reverse media my-1 p-2 border border-secondary rounded">
+                    <svg class="align-self-center mx-3" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">
+                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                    </svg>
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1">                            
+                            <a class="text-secondary" href="{% url 'user' comment.author.id %}">{{comment.author.username}}</a>
+                        </h5>
+                        {{comment.text}}
+                    </div>
+                </li>            
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

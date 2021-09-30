@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
+    <body>
+        <div class="p-3 mb-2 bg-secondary text-white">
+            <h1>Auctions</h1>
+            <div class="justify-content-end">
+                
+                    {% if user.is_authenticated %}
+                        <p class="text-dark">Signed in as: <a href="{% url 'user' user.id %}" class="text-dark"><strong>{{ user.username }}</strong></a></p>
+                    {% else %}
+                        <p class="text-dark">Not signed in</p>                            
+                    {% endif %}
+                                   
+            </div>
+        </div>        
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'index' %}">Active Listings</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'mywatchlist' %}">
+                                    Watchlist
+                                    <span class="bg-secondary badge badge-primary badge-pill rounded">{{listings_in_watchlist}}</span>                                    
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'create' %}">Create Listing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                            </li>                            
+                        
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">Register</a>
+                            </li>
+                        {% endif %}
+                        
+                    </ul>
+                    
+                </div>
+            </nav>
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>
